@@ -37,6 +37,7 @@ prep_for_vms () {
 
 # $1 = GCE IP, $2 = SVC_NAME, $3 = PORT, $4 = PROTOCOL
 add_vm () {
+    source ./env.sh
     GCE_IP=$1
     SVC_NAME=$2
     PORT=$3
@@ -75,7 +76,8 @@ EOF
 
     # ssh into the VM and run that script
     log "🛸 ssh-ing into the $SVC_NAME VM to finish up..."
-    gcloud compute ssh --zone $ZONE $SVC_NAME -- "SVC_NAME=$SVC_NAME PORT=$PORT ./run-on-vm.sh"
+
+    gcloud compute ssh --zone $ZONE $SVC_NAME -- "DOCKER_RUN_ENV=\"${DOCKER_RUN_ENV}\" SVC_NAME=$SVC_NAME PORT=$PORT ./run-on-vm.sh"
     log " ✅ Done adding $SVC_NAME"
 }
 

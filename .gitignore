@@ -1,4 +1,4 @@
 *.pem
-istio-*
+istio-1.*
 *.env
 gce/temp/

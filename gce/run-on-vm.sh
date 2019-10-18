@@ -15,8 +15,8 @@
 # limitations under the License.
 
 # set vars
-ISTIO_VERSION=${ISTIO_VERSION:=1.3.3}
-GWIP='34.66.55.31'
+ISTIO_VERSION="1.3.3"
+GWIP=""
 
 # setup --  install docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -28,7 +28,6 @@ sudo apt-get install -y docker-ce;
 echo -e "\n$GWIP istio-citadel istio-pilot istio-pilot.istio-system" | \
    sudo tee -a /etc/hosts
 
-# install + run the istio remote - version ${ISTIO_VERSION}
 curl -L https://storage.googleapis.com/istio-release/releases/${ISTIO_VERSION}/deb/istio-sidecar.deb > istio-sidecar.deb
 
 sudo dpkg -i istio-sidecar.deb
@@ -44,7 +43,5 @@ ls -l /var/lib/istio/envoy/envoy_bootstrap_tmpl.json
 ls -l /var/lib/istio/envoy/sidecar.env
 sudo systemctl start istio
 
-# run service, on port, with all the env vars
 # port exposed as "-p" AND as Env because some of the services need their own port, as a variable.
-sudo docker run -d -p $PORT:$PORT -e $PORT=$PORT $DOCKER_RUN_ENV gcr.io/google-samples/microservices-demo/$SVC_NAME:v0.1.2
-
+sudo docker run -d --name $SVC_NAME -p $PORT:$PORT -e "PORT=$PORT" $DOCKER_RUN_ENV gcr.io/google-samples/microservices-demo/$SVC_NAME:v0.1.2
