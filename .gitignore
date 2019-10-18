@@ -1,0 +1,4 @@
+*.pem
+istio-*
+*.env
+gce/temp/
