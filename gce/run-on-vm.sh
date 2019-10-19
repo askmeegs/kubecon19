@@ -16,7 +16,7 @@
 
 # set vars
 ISTIO_VERSION="1.3.3"
-GWIP=""
+GWIP='35.223.47.11'
 
 # setup --  install docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -37,14 +37,14 @@ ls -ld /var/lib/istio
 sudo mkdir -p /etc/certs
 sudo cp {root-cert.pem,cert-chain.pem,key.pem} /etc/certs
 sudo cp cluster.env /var/lib/istio/envoy
+sudo cp sidecar.env /var/lib/istio/envoy
 sudo chown -R istio-proxy /etc/certs /var/lib/istio/envoy
 
-ls -l /var/lib/istio/envoy/envoy_bootstrap_tmpl.json
-ls -l /var/lib/istio/envoy/sidecar.env
 sudo systemctl start istio
 
+
 # port exposed as "-p" AND as Env because some of the services need their own port, as a variable.
-IMAGE="gcr.io/google-samples/microservices-demo/$SVC_NAME:v0.1.2"
+IMAGE="gcr.io/megandemo/$SVC_NAME:latest"
 if [ $SVC_NAME = "redis-cart" ]
 then
    IMAGE="redis:alpine"

@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadgen
+  labels:
+    app: loadgen
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: loadgen
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: loadgen
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: loadgen
+    spec:
+      containers:
+      - name: loadgen
+        image: gcr.io/megandemo/loadgen-httpbin:latest
+        imagePullPolicy: Always
