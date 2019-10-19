@@ -22,7 +22,6 @@ prep_for_vm () {
     echo "ISTIO_SERVICE=${SVC_NAME}" >> temp/cluster.env
     echo "ISTIO_SYSTEM_NAMESPACE=istio-system" >> temp/cluster.env
     echo "SERVICE_NAMESPACE=default" >> temp/cluster.env
-    echo "ISTIO_NAMESPACE=default" >> temp/cluster.env
     echo "ISTIO_AGENT_FLAGS=\"--proxyLogLevel debug\""  >> temp/cluster.env
 
     # Get istio control plane certs
