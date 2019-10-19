@@ -37,11 +37,11 @@ ls -ld /var/lib/istio
 sudo mkdir -p /etc/certs
 sudo cp {root-cert.pem,cert-chain.pem,key.pem} /etc/certs
 sudo cp cluster.env /var/lib/istio/envoy
+sudo cp sidecar.env /var/lib/istio/envoy
 sudo chown -R istio-proxy /etc/certs /var/lib/istio/envoy
 
-ls -l /var/lib/istio/envoy/envoy_bootstrap_tmpl.json
-ls -l /var/lib/istio/envoy/sidecar.env
 sudo systemctl start istio
+
 
 # port exposed as "-p" AND as Env because some of the services need their own port, as a variable.
 IMAGE="gcr.io/google-samples/microservices-demo/$SVC_NAME:v0.1.2"

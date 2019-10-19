@@ -7,7 +7,7 @@ log() { echo "$1" >&2; }
 #  brew install gnu-sed
 
 # Get GKE cluster info that applies to all the service VMs
-prep_for_vms () {
+prep_for_vm () {
     #setup
     source ./env.sh
     gcloud config set project $PROJECT_ID
@@ -17,9 +17,12 @@ prep_for_vms () {
     ISTIO_SERVICE_CIDR=$(gcloud container clusters describe ${CLUSTER_NAME?} --zone ${ZONE?} --project ${PROJECT_ID?} --format "value(servicesIpv4Cidr)")
 
     # generate cluster.env from the GKE cluster
-    log "istio CIDR is: ${ISTIO_SERVICE_CIDR}"
-    echo -e "ISTIO_CP_AUTH=MUTUAL_TLS\nISTIO_SERVICE_CIDR=$ISTIO_SERVICE_CIDR\n" | tee temp/cluster.env
-    echo "ISTIO_INBOUND_PORTS=8080" > temp/cluster.env
+    echo -e "ISTIO_SERVICE_CIDR=$ISTIO_SERVICE_CIDR\n" | tee temp/cluster.env
+    echo "ISTIO_INBOUND_PORTS=${PORT},8080" >> temp/cluster.env
+    echo "ISTIO_SERVICE=${SVC_NAME}" >> temp/cluster.env
+    echo "ISTIO_SYSTEM_NAMESPACE=istio-system" >> temp/cluster.env
+    echo "SERVICE_NAMESPACE=default" >> temp/cluster.env
+    echo "ISTIO_AGENT_FLAGS=\"--proxyLogLevel debug\""  >> temp/cluster.env
 
     # Get istio control plane certs
     kubectl -n ${SERVICE_NAMESPACE?} get secret istio.default \
@@ -29,6 +32,9 @@ prep_for_vms () {
     kubectl -n ${SERVICE_NAMESPACE?} get secret istio.default \
     -o jsonpath='{.data.cert-chain\.pem}' | base64 --decode | tee temp/cert-chain.pem
 
+    # generate sidecar.env
+    cp temp/cluster.env temp/sidecar.env
+
     # populate the configure script
     pattern='GWIP=""'
     replace="GWIP='$GWIP'"
@@ -37,15 +43,19 @@ prep_for_vms () {
 
 # $1 = GCE IP, $2 = SVC_NAME, $3 = PORT, $4 = PROTOCOL
 add_vm () {
-    source ./env.sh
     GCE_IP=$1
     SVC_NAME=$2
     PORT=$3
     PROTOCOL=$4
+
     log "⏰ Adding $SVC_NAME to the mesh..."
+    source ./env.sh
+    rm -r temp/*
+    prep_for_vm $SVC_NAME
+
     # scp certs, env file, and script to the GCE instance
-    log "sending cluster.env, certs, and script to the $2 VM..."
-    gcloud compute --project ${PROJECT_ID?} scp --zone ${ZONE?} ./run-on-vm.sh temp/cluster.env temp/*.pem $SVC_NAME:
+    log "sending cluster.env, sidecar.env, certs, and script to the $2 VM..."
+    gcloud compute --project ${PROJECT_ID?} scp --zone ${ZONE?} ./run-on-vm.sh temp/sidecar.env temp/cluster.env temp/*.pem $SVC_NAME:
 
     log "creating Istio resources..."
     ../gke/istio-${ISTIO_VERSION}/bin/istioctl register $SVC_NAME $GCE_IP "$PROTOCOL:${PORT}"

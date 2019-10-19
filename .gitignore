@@ -2,3 +2,4 @@
 istio-1.*
 *.env
 gce/temp/
+gke/istio.yaml
