@@ -3,7 +3,7 @@
 set -euo pipefail
 log() { echo "$1" >&2; }
 
-source ./env
+source ./env.sh
 
 # set vars
 K8S_POD_CIDR=$(gcloud container clusters describe ${CLUSTER_NAME?} --zone ${ZONE?} --format=json | jq -r '.clusterIpv4Cidr')

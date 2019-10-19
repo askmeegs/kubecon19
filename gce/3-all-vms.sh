@@ -4,9 +4,6 @@ source ./add-istio-vm.sh
 
 prep_for_vms
 
-log "☸️ Deploying loadgen and redis in Kubernetes..."
-kubectl apply -f ../hipstershop-all-vm
-
 # assumes productcatalog is already ready
 for svc in "${SERVICES[@]}" ; do
     SVC_NAME="${svc%%:*}"

@@ -38,3 +38,4 @@ kubectl apply -f istio.yaml
 
 # expose kiali
 kubectl expose deployment -n istio-system kiali --port 20001 --name kiali2 --type LoadBalancer
+kubectl label namespace default istio-injection=enabled
