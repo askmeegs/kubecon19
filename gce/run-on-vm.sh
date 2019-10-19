@@ -16,7 +16,7 @@
 
 # set vars
 ISTIO_VERSION="1.3.3"
-GWIP='35.223.47.11'
+GWIP=""
 
 # setup --  install docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
