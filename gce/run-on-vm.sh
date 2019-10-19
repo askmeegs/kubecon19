@@ -16,7 +16,7 @@
 
 # set vars
 ISTIO_VERSION="1.3.3"
-GWIP='35.223.47.11'
+GWIP=""
 
 # setup --  install docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -44,7 +44,7 @@ sudo systemctl start istio
 
 
 # port exposed as "-p" AND as Env because some of the services need their own port, as a variable.
-IMAGE="gcr.io/megandemo/$SVC_NAME:latest"
+IMAGE="gcr.io/google-samples/microservices-demo/$SVC_NAME:v0.1.2"
 if [ $SVC_NAME = "redis-cart" ]
 then
    IMAGE="redis:alpine"
