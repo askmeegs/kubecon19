@@ -2,8 +2,6 @@
 
 source ./add-istio-vm.sh
 
-prep_for_vms
-
 SVC_NAME="productcatalogservice"
 PORT="3550"
 PROTOCOL="grpc"

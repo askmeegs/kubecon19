@@ -2,4 +2,5 @@
 istio-1.*
 *.env
 gce/temp/
-gke/istio.yaml
+istio.yaml
+.DS_Store

@@ -29,8 +29,6 @@ helm template ${WORKDIR}/istio-${ISTIO_VERSION}/install/kubernetes/helm/istio --
 --set "kiali.dashboard.jaegerURL=http://jaeger-query:16686" \
 --set "kiali.dashboard.grafanaURL=http://grafana:3000" \
 --set grafana.enabled=true \
---set global.proxy.accessLogFile="/dev/stdout" \
---set sidecarInjectorWebhook.enabled=true \
 --set global.meshExpansion.enabled=true >> istio.yaml
 
 # install istio

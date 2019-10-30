@@ -2,12 +2,18 @@
 
 set -euo pipefail
 log() { echo "$1" >&2; }
+source ./env.sh
 
 # NOTE - if you are on a mac and you don't have gsed, uncomment this line:
 #  brew install gnu-sed
 
 # Get GKE cluster info that applies to all the service VMs
 prep_for_vm () {
+    GCE_IP=$1
+    SVC_NAME=$2
+    PORT=$3
+    PROTOCOL=$4
+
     #setup
     source ./env.sh
     gcloud config set project $PROJECT_ID
@@ -18,11 +24,8 @@ prep_for_vm () {
 
     # generate cluster.env from the GKE cluster
     echo -e "ISTIO_SERVICE_CIDR=$ISTIO_SERVICE_CIDR\n" | tee temp/cluster.env
-    echo "ISTIO_INBOUND_PORTS=${PORT},8080" >> temp/cluster.env
-    echo "ISTIO_SERVICE=${SVC_NAME}" >> temp/cluster.env
-    echo "ISTIO_SYSTEM_NAMESPACE=istio-system" >> temp/cluster.env
-    echo "SERVICE_NAMESPACE=default" >> temp/cluster.env
-    echo "ISTIO_AGENT_FLAGS=\"--proxyLogLevel debug\""  >> temp/cluster.env
+    echo "ISTIO_INBOUND_PORTS=${PORT}" >> temp/cluster.env
+    echo "ISTIO_CP_AUTH=MUTUAL_TLS" >> temp/cluster.env
 
     # Get istio control plane certs
     kubectl -n ${SERVICE_NAMESPACE?} get secret istio.default \
@@ -39,6 +42,7 @@ prep_for_vm () {
     pattern='GWIP=""'
     replace="GWIP='$GWIP'"
     gsed -r -i "s|$pattern|$replace|g" ./run-on-vm.sh
+    log "✅done"
 }
 
 # $1 = GCE IP, $2 = SVC_NAME, $3 = PORT, $4 = PROTOCOL
@@ -50,8 +54,8 @@ add_vm () {
 
     log "⏰ Adding $SVC_NAME to the mesh..."
     source ./env.sh
-    rm -r temp/*
-    prep_for_vm $SVC_NAME
+    # rm -r ./temp/*
+    prep_for_vm $GCE_IP $SVC_NAME $PORT $PROTOCOL
 
     # scp certs, env file, and script to the GCE instance
     log "sending cluster.env, sidecar.env, certs, and script to the $2 VM..."
