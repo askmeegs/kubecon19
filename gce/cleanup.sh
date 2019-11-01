@@ -3,7 +3,7 @@
 set -euo pipefail
 log() { echo "$1" >&2; }
 
-source ./env.sh
+source ./gce/env.sh
 
 delete_vm () {
     # gcloud compute firewall-rules delete k8s-to-$1-gce -q
