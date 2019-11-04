@@ -15,8 +15,8 @@
 # limitations under the License.
 
 # set vars
-ISTIO_VERSION="1.3.3"
-GWIP='35.231.25.126'
+ISTIO_VERSION="1.3.4"
+GWIP=''
 
 # setup --  install docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -45,5 +45,5 @@ sudo systemctl start istio
 
 # port exposed as "-p" AND as Env because some of the services need their own port, as a variable.
 # IMAGE="gcr.io/google-samples/microservices-demo/$SVC_NAME:v0.1.2"
-IMAGE="gcr.io/megandemo/productcatalogservice:debug"
+IMAGE="gcr.io/google-samples/microservices-demo/productcatalogservice:v0.1.2"
 sudo docker run -d --name $SVC_NAME -p $PORT:$PORT -e "PORT=$PORT" $DOCKER_RUN_ENV $IMAGE

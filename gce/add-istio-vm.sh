@@ -62,7 +62,7 @@ add_vm () {
     gcloud compute --project ${PROJECT_ID?} scp --zone ${ZONE?} ./run-on-vm.sh temp/sidecar.env temp/cluster.env temp/*.pem $SVC_NAME:
 
     log "creating Istio resources..."
-    ../gke/istio-${ISTIO_VERSION}/bin/istioctl register $SVC_NAME $GCE_IP "$PROTOCOL:${PORT}"
+    ../istio-${ISTIO_VERSION}/bin/istioctl register $SVC_NAME $GCE_IP "$PROTOCOL:${PORT}"
 
     PROTOCOL_UPPER=$(echo $PROTOCOL | tr a-z A-Z)
 
