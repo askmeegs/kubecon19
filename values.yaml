@@ -1,0 +1,17 @@
+---
+gateways:
+  istio-egressgateway:
+    enabled: true
+    env:
+      ISTIO_META_REQUESTED_NETWORK_VIEW: external
+global:
+  controlPlaneSecurityEnabled: true
+  meshExpansion:
+    enabled: true
+  multiCluster:
+    enabled: true
+  podDNSSearchNamespaces:
+    - global
+    - "{{ valueOrDefault .DeploymentMeta.Namespace \"default\" }}.global"
+istiocoredns:
+  enabled: true
