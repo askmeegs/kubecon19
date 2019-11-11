@@ -8,7 +8,7 @@ spec:
   http:
   - route:
     - destination:
-        host: productcatalogservice-local
+        host: productcatalogservice-gke
       weight: 90
     - destination:
         host: productcatalogservice

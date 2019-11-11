@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: productcatalogservice-local
+  name: productcatalogservice-gke
 spec:
   selector:
     matchLabels:
-      app: productcatalogservice-local
+      app: productcatalogservice-gke
   template:
     metadata:
       labels:
-        app: productcatalogservice-local
+        app: productcatalogservice-gke
         version: local
     spec:
       terminationGracePeriodSeconds: 5
@@ -41,11 +41,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: productcatalogservice-local
+  name: productcatalogservice-gke
 spec:
   type: ClusterIP
   selector:
-    app: productcatalogservice-local
+    app: productcatalogservice-gke
     version: local
   ports:
   - name: grpc
