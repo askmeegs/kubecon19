@@ -10,7 +10,7 @@ spec:
     metadata:
       labels:
         app: productcatalogservice-gke
-        version: local
+        version: gke
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -46,7 +46,7 @@ spec:
   type: ClusterIP
   selector:
     app: productcatalogservice-gke
-    version: local
+    version: gke
   ports:
   - name: grpc
     port: 3550
