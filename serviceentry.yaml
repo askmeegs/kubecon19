@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: productcatalogservice
+spec:
+  hosts:
+  - productcatalogservice.default.svc.cluster.local
+  ports:
+  - number: 3550
+    name: grpc
+    protocol: GRPC
+  resolution: STATIC
+  endpoints:
+  - address: 10.128.0.6
+    ports:
+      grpc: 3550
+    labels:
+      app: productcatalogservice
+      version: "v1"

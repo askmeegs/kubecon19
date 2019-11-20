@@ -43,8 +43,8 @@ kubectl get serviceentry
 echo -e "\n"
 echo "${bold}Inspecting Hipster Shop app ServiceEntries...${normal}"
 read -p ''
-echo -e "${color}$ kubectl get serviceentry -o yaml   ${nc}" | pv -qL $SPEED
-kubectl get serviceentry -o yaml
+echo -e "${color}$cat serviceentry.yaml   ${nc}" | pv -qL $SPEED
+cat serviceentry.yaml
 
 # echo -e "\n"
 # echo "${bold}Opening Hipster Shop app...${normal}"
