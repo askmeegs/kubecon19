@@ -24,6 +24,18 @@ echo -e "${color}$ kubectl apply -f traffic-splitting/productcatalog.yaml${nc}" 
 kubectl apply -f traffic-splitting/productcatalog.yaml
 
 echo -e "\n"
+echo "${bold}Inspecting services...${normal}"
+read -p ''
+echo -e "${color}$ kubectl get services -n default | grep productcatalogservice${nc}" | pv -qL $SPEED
+kubectl get services -n default | grep productcatalogservice
+
+echo -e "\n"
+echo "${bold}Inspecting endpoints...${normal}"
+read -p ''
+echo -e "${color}$ kubectl get endpoints -n default | grep productcatalogservice${nc}" | pv -qL $SPEED
+kubectl get endpoints -n default | grep productcatalogservice
+
+echo -e "\n"
 echo "${bold}Applying VirtualService...${normal}"
 read -p ''
 echo -e "${color}$ kubectl apply -f traffic-splitting/split-traffic.yaml${nc}" | pv -qL $SPEED
